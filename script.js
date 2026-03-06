@@ -1,5 +1,18 @@
-const categoriesContainer = document.getElementById("categories-container ");
-//this function is for the left side trees categories 
+const categoriesContainer = document.getElementById("categories-container");
+//const treesContainer =document.getElementById("treesContainer")
+const loadSpinner =document.getElementById("loadingSpinner");
+
+//show loading function
+function showLoading(){
+loadSpinner.classList.remove("hidden");
+ treesContainer.innerHTML="";
+}
+//hode loading function
+
+function hideLoading(){
+loadSpinner.classList.add("hidden");
+}
+
 async function loadCategories() {
 
   const res = await fetch("https://openapi.programming-hero.com/api/categories");
@@ -12,19 +25,47 @@ async function loadCategories() {
     const btn = document.createElement("button");
     btn.className = "btn btn-outline w-full";
     btn.textContent=category.category_name;
-   // btn.innerText = category.category;
+    btn.onclick=()=>selectCatogory(category.id,btn);
+
+    
 
     categoriesContainer.appendChild(btn);
   });
 
 }
 
+//select category for the button function 
+
+async function selectCatogory(categoryId,btn){
+    console.log(categoryId,btn);
+    showLoading();
+
+ const allbuttons=document.querySelectorAll("#categories-container button, #allTreesbtn");
+ console.log(allbuttons);
+
+ allbuttons.forEach(btn=>{
+    btn.classList.remove("btn-primary");
+    btn.classList.add("btn-outline");
+ })
+
+ btn.classList.add("btn-primary");   
+ btn.classList.remove("btn-outline");
+}
+
+
+
 //this function is for the tree cards loading 
 async function loadTrees(){
+    showLoading();
+    
+    loadSpinner.classList.add("flex");
+
     const res=await fetch("https://openapi.programming-hero.com/api/plants");
     const data= await res.json();
-     displayTrees(data.plants);
+     
 
+     hideLoading();
+      displayTrees(data.plants);
 }
 
 //this function will displa theres 
